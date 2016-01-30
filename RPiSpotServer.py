@@ -44,26 +44,49 @@ serv.listen(MAXQCON)
 GPIO.setup(1, GPIO.OUT)
 GPIO.setup(2, GPIO.OUT)
 GPIO.setup(3, GPIO.OUT)
+GPIO.setup(4, GPIO.OUT)
+GPIO.setup(5, GPIO.OUT)
+GPIO.setup(6, GPIO.OUT)
+
+state=GPIO.HIGH
+pin=-1
 
 try :
     while 1:
 
-      print("listening...")
-      client, cli_addr = serv.accept()
-      print("connected to %s at %s" % (client,cli_addr))
+        print("listening...")
+        client, cli_addr = serv.accept()
+        print("connected to %s at %s" % (client,cli_addr))
 
-      data = client.recv(BUFSIZE)
-      print "\"" + data + "\""
-    
-      if data[1:3] == "on":
-	print("compliant text ! => turning on LED")
-	GPIO.output(int(data[0]), GPIO.HIGH)
-       
-      if data[1:3] == "of":
-	print("compliant text ! => turning off LED")
-	GPIO.output(int(data[0]), GPIO.LOW)
+        data = client.recv(BUFSIZE)
+        print "\"" + data + "\""
+        
+        if data[0:2] == "on":
+            state=GPIO.HIGH
+        if data[0:2] == "of":
+            state=GPIO.LOW
+            
+        color = data[2:5]
+        print(color)
+        if color == "Bl1":
+            pin=1
+        if color == "Bl2":
+            pin=2
+        if color == "Gre":
+            pin=3
+        if color == "Yel":
+            pin=4
+        if color == "Ora":
+            pin=5
+        if color ==  "Red":
+            pin=6
+        
+        if pin != -1:
+            GPIO.output(pin, state)
+            print("state : %s %s" % (pin,state))
 
-      client.close()
+        client.close()
+        pin=-1
 	
 except KeyboardInterrupt:
     print("\ninterrupt received, proceeding…") 
