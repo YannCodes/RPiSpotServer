@@ -41,12 +41,8 @@ serv.bind(ADDR)
 serv.listen(MAXQCON)
 
 #GPIO setup
-GPIO.setup(1, GPIO.OUT)
-GPIO.setup(2, GPIO.OUT)
-GPIO.setup(3, GPIO.OUT)
-GPIO.setup(4, GPIO.OUT)
-GPIO.setup(5, GPIO.OUT)
-GPIO.setup(6, GPIO.OUT)
+for pin in range(1,7):
+    GPIO.setup(pin, GPIO.OUT)
 
 state=GPIO.HIGH
 pin=-1
@@ -84,6 +80,11 @@ try :
         if pin != -1:
             GPIO.output(pin, state)
             print("state : %s %s" % (pin,state))
+
+        if color == "All":
+            for pin in range(1,7):
+                GPIO.output(pin, state)
+                print("state : %s %s" % (pin,state))
 
         client.close()
         pin=-1
